@@ -4,6 +4,7 @@ import DatabaseHandler from '~/utils/db_handler';
 	const supabase = useSupabaseClient();
 	const user = useSupabaseUser();
 	let loggedIn = useState<boolean>('loggedIn', () => user.value != null);
+	console.log("DEFAULT: " + loggedIn.value);
 	let profile = await DatabaseHandler.getProfile(supabase, 'id, avatar, username', {id: user.value?.id});
 
 	watchEffect(async () => {
@@ -13,17 +14,19 @@ import DatabaseHandler from '~/utils/db_handler';
 
 		if (!user.value && loggedIn.value) {
 			loggedIn.value = false;
+			console.log("EFFECT: " + loggedIn.value);
 		}
 
 		if (user.value && !loggedIn.value) {
 			loggedIn.value = true;
+			console.log("EFFECT2: " + loggedIn.value);
 		}
 	});
 
 
 	const Logout = async () => {
-		loggedIn.value = false;
 		await supabase.auth.signOut();
+		loggedIn.value = false;
 	}
 
 	const navigateToLogin = () => {
@@ -37,13 +40,13 @@ import DatabaseHandler from '~/utils/db_handler';
 			<NuxtImg :src="profile.avatar" class="w-7 h-7 rounded-3xl border-accent border-2"/> {{ profile.username }}
 		</NuxtLink>
 
-		<div v-if="user.value" class="flex gap-2">
+		<div v-if="loggedIn" class="flex gap-2">
 			<NuxtLink to="/new" aria-label="New Post" class="p-2 border rounded-lg border-primary-dark bg-primary dark:bg-primary-dark hover:brightness-50 dark:border-primary flex items-center justify-center cursor-pointer"><Icon name="jam:write" /></NuxtLink>
 			<button @click="Logout" aria-label="Logout" class="p-2 border rounded-lg border-primary-dark bg-primary dark:bg-primary-dark hover:brightness-50 dark:border-primary flex items-center justify-center cursor-pointer"><Icon name="mdi:logout" /></button>
 			<ThemeSwitcher />
 		</div>
 
-		<div v-if="!user.value" class="flex gap-2">
+		<div v-if="loggedIn == false" class="flex gap-2">
 			<button @click="navigateToLogin" aria-label="Login" class="p-2 border rounded-lg border-primary-dark bg-primary dark:bg-primary-dark hover:brightness-50 dark:border-primary flex items-center justify-center cursor-pointer gap-1 text-sm"><Icon name="ic:round-login" />Login</button>
 			<ThemeSwitcher />
 		</div>

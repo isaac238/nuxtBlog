@@ -16,11 +16,19 @@ import DatabaseHandler from '~/utils/db_handler';
 		if (!user.value && loggedIn.value) {
 			loggedIn.value = false;
 			console.log("EFFECT: " + loggedIn.value);
+			if (process.client) {
+				document.getElementById('loggedOutDiv')?.classList.remove('hidden');
+				document.getElementById('loggedInDiv')?.classList.add('hidden');
+			}
 		}
 
 		if (user.value && !loggedIn.value) {
 			loggedIn.value = true;
 			console.log("EFFECT2: " + loggedIn.value);
+			if (process.client) {
+				document.getElementById('loggedOutDiv')?.classList.add('hidden');
+				document.getElementById('loggedInDiv')?.classList.remove('hidden');
+			}
 		}
 	});
 
@@ -41,13 +49,13 @@ import DatabaseHandler from '~/utils/db_handler';
 			<NuxtImg :src="profile.avatar" class="w-7 h-7 rounded-3xl border-accent border-2"/> {{ profile.username }}
 		</NuxtLink>
 
-		<div v-if="loggedIn" class="flex gap-2">
+		<div v-if="loggedIn" id="loggedInDiv" class="flex gap-2">
 			<NuxtLink to="/new" aria-label="New Post" class="p-2 border rounded-lg border-primary-dark bg-primary dark:bg-primary-dark hover:brightness-50 dark:border-primary flex items-center justify-center cursor-pointer"><Icon name="jam:write" /></NuxtLink>
 			<button @click="Logout" aria-label="Logout" class="p-2 border rounded-lg border-primary-dark bg-primary dark:bg-primary-dark hover:brightness-50 dark:border-primary flex items-center justify-center cursor-pointer"><Icon name="mdi:logout" /></button>
 			<ThemeSwitcher />
 		</div>
 
-		<div v-if="loggedIn == false" class="flex gap-2">
+		<div v-if="loggedIn == false" id="loggedOutDiv" class="flex gap-2">
 			<button @click="navigateToLogin" aria-label="Login" class="p-2 border rounded-lg border-primary-dark bg-primary dark:bg-primary-dark hover:brightness-50 dark:border-primary flex items-center justify-center cursor-pointer gap-1 text-sm"><Icon name="ic:round-login" />Login</button>
 			<ThemeSwitcher />
 		</div>

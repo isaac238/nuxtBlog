@@ -1,25 +1,29 @@
 <script setup lang="ts">
 	const supabase = useSupabaseClient();
 	const user = useSupabaseUser();
-	const {data, error} = await supabase.from('profiles').select('id, avatar, username').match({'id': user.value?.id}).single();
-	const profile = useState<any>('profile', () => data);
 	let loggedIn = useState<boolean>('loggedIn', () => false);
 	loggedIn.value = useSupabaseUser().value != null;
-	let username = 	profile?.value.username;
-	let avatar = profile?.value.avatar;
+	let username = '';
+	let avatar = '';
+	if (loggedIn) {
+		const {data, error} = await supabase.from('profiles').select('id, avatar, username').match({'id': user.value?.id}).single();
+		const profile = useState<any>('profile', () => data);
+		username = 	profile?.value.username;
+		avatar = profile?.value.avatar;
+		watchEffect(async () => {
+			if (!user.value && loggedIn.value) {
+				loggedIn.value = false;
+				navigateTo('/login');
+			} if (user.value && !loggedIn.value) {
+				loggedIn.value = true;
+				const {data, error} = await supabase.from('profiles').select('id, avatar, username').match({'id': user.value?.id}).single();
+				profile.value = data;
+				username = 	profile?.value.username;
+				avatar = profile?.value.avatar;
+			}
+		});
+	}
 
-	watchEffect(async () => {
-		if (!user.value && loggedIn.value) {
-			loggedIn.value = false;
-			navigateTo('/login');
-		} if (user.value && !loggedIn.value) {
-			loggedIn.value = true;
-			const {data, error} = await supabase.from('profiles').select('id, avatar, username').match({'id': user.value?.id}).single();
-			profile.value = data;
-			username = 	profile?.value.username;
-			avatar = profile?.value.avatar;
-		}
-	});
 
 	const Logout = async () => {
 		await supabase.auth.signOut();

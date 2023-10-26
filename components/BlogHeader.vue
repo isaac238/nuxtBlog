@@ -1,9 +1,10 @@
 <script setup lang="ts">
+import useLoggedIn from '~/composasbles/useLoggedIn';
 import DatabaseHandler from '~/utils/db_handler';
 
 	const supabase = useSupabaseClient();
 	const user = useSupabaseUser();
-	let loggedIn = useState<boolean>('loggedIn', () => user.value != null);
+	let loggedIn = useLoggedIn();
 	console.log("DEFAULT: " + loggedIn.value);
 	let profile = await DatabaseHandler.getProfile(supabase, 'id, avatar, username', {id: user.value?.id});
 

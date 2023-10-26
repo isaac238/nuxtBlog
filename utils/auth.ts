@@ -23,6 +23,7 @@ export default class Auth {
 				}
 			});
 			if (error) throw error;
+			return true;
 		} catch(error) {
 			console.log(error);
 		}
@@ -35,6 +36,7 @@ export default class Auth {
 				password: password,
 			});
 			if (error) throw error;
+			return true;
 		} catch (error) {
 			console.log(error);
 		}

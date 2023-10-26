@@ -12,15 +12,14 @@
 	const supabase = useSupabaseClient();
 	const user = useSupabaseUser();
 
-	watchEffect( async () => {
-		if (user.value) {
-			await navigateTo('/confirm');
-		}
-	});
 
 	const Register = async () => {
-		await Auth.Register(supabase, username.value, email.value, password.value);
-		await Auth.Login(supabase, email.value, password.value);
+		const register = await Auth.Register(supabase, username.value, email.value, password.value);
+		const login = await Auth.Login(supabase, email.value, password.value);
+
+		if (login && register) {
+			await navigateTo('/confirm');
+		}
 	}
 
 	const OAuth = async (provider: 'github' | 'google') => {

@@ -13,7 +13,7 @@ import DatabaseHandler from '~/utils/db_handler';
 
 		if (!user.value && loggedIn.value) {
 			loggedIn.value = false;
-			navigateTo('/login');
+			await navigateTo('/login');
 		}
 
 		if (user.value && !loggedIn.value) {

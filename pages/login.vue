@@ -8,9 +8,9 @@
 	const supabase = useSupabaseClient();
 	const user = useSupabaseUser();
 	
-	watchEffect(() => {
+	watchEffect( async () => {
 		if (user.value) {
-			navigateTo('/confirm');
+			await navigateTo('/confirm');
 		}
 	});
 

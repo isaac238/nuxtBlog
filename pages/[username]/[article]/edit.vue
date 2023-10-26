@@ -21,7 +21,7 @@ import DatabaseHandler from '~/utils/db_handler';
 	const parmasTitle = route.params.article;
 
 	if (!await DatabaseHandler.articleExists(supabase, parmasTitle as string, user.value?.id as string)) {
-		navigateTo('/');
+		await navigateTo('/');
 	}
 
 	const article = await DatabaseHandler.getArticle(supabase, parmasTitle as string, user.value?.id as string);
@@ -85,13 +85,13 @@ import DatabaseHandler from '~/utils/db_handler';
 		} catch (error) {
 			console.log(error);
 		}
-		watchEffect(() => {
+		watchEffect( async () => {
 			if (uploadComplete && updateComplete) {
 				uploadComplete = false;
 				updateComplete = false;
 				document.querySelector('html')?.classList.remove('cursor-wait');
 				disabled.value = false;
-				return navigateTo(`/${user.value?.user_metadata.user_name}/${title.value}`);
+				await navigateTo(`/${user.value?.user_metadata.user_name}/${title.value}`);
 			}
 		});
 	}

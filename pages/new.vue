@@ -65,7 +65,7 @@
 		} catch(error: any) {
 			console.log(error);
 		}
-		navigateTo(`/${user.value?.user_metadata.user_name}/${title.value}`);
+		await navigateTo(`/${user.value?.user_metadata.user_name}/${title.value}`);
 	}
 </script>
 

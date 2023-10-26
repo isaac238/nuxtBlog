@@ -14,7 +14,7 @@ import DatabaseHandler from '~/utils/db_handler';
 	const link = "/" + author.username + '/' + props.title;
 
 	const navigate = () => {
-		navigateTo(link);
+		return navigateTo(link);
 	}
 </script>
 <template>

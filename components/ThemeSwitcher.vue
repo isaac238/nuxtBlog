@@ -1,5 +1,7 @@
 <script setup lang="ts">
-	let theme = useState('theme', () => 'light');
+	import useTheme from '../composasbles/useTheme';
+
+	const theme = useTheme();
 	let icon = useState('icon', () => (theme.value == 'dark') ? 'ph:sun' : 'ph:moon');
 
 	if (process.client) {

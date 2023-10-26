@@ -18,5 +18,10 @@
     "nuxt-icon": "^0.5.0",
     "vue": "^3.3.6",
     "vue-router": "^4.2.5"
+  },
+  "dependencies": {
+    "highlight.js": "^11.9.0",
+    "marked": "^9.1.2",
+    "marked-highlight": "^2.0.6"
   }
 }

@@ -22,8 +22,8 @@ import DatabaseHandler from '~/utils/db_handler';
 	}
 </script>
 <template>
-	<NuxtLink @click="navigate" class="bg-primary dark:bg-primary-dark flex flex-col p-7 rounded border border-accent hover:scale-[1.025] ease-in-out duration-200 max-w-2xl 2xl:w-1/6 xl:w-1/5 lg:w-1/4 md:w-1/3 sm:w-full w-full pb-10 cursor-pointer">
-		<div aria-label="Click to go to the authors posts" @click="navigateToAuthor" class="inline-flex items-center gap-2">
+	<NuxtLink @click.once="navigate" class="bg-primary dark:bg-primary-dark flex flex-col p-7 rounded border border-accent hover:scale-[1.025] ease-in-out duration-200 max-w-2xl 2xl:w-1/6 xl:w-1/5 lg:w-1/4 md:w-1/3 sm:w-full w-full pb-10 cursor-pointer">
+		<div aria-label="Click to go to the authors posts" @click.once="navigateToAuthor" class="inline-flex items-center gap-2 hover:brightness-50">
 			<NuxtImg class="border-2 border-accent w-6 h-6 rounded-3xl" v-if="author.avatar" :src="author.avatar"/>
 			<h1 class="text-xl">{{ author.username }}</h1>
 		</div>

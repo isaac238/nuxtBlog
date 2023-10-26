@@ -13,7 +13,6 @@ import DatabaseHandler from '~/utils/db_handler';
 
 		if (!user.value && loggedIn.value) {
 			loggedIn.value = false;
-			await navigateTo('/login');
 		}
 
 		if (user.value && !loggedIn.value) {
@@ -26,6 +25,10 @@ import DatabaseHandler from '~/utils/db_handler';
 		loggedIn.value = false;
 		await supabase.auth.signOut();
 	}
+
+	const navigateToLogin = () => {
+		return navigateTo('/login');
+	}
 </script>
 <template>
 	<header class="flex w-full justify-between bg-primary dark:bg-primary-dark p-2 dark:text-text-dark">
@@ -35,7 +38,7 @@ import DatabaseHandler from '~/utils/db_handler';
 		<div class="flex gap-2">
 		<NuxtLink v-if="loggedIn" to="/new" aria-label="New Post" class="p-2 border rounded-lg border-primary-dark bg-primary dark:bg-primary-dark hover:brightness-50 dark:border-primary flex items-center justify-center cursor-pointer"><Icon name="jam:write" /></NuxtLink>
 		<button  v-if="loggedIn" @click="Logout" aria-label="Logout" class="p-2 border rounded-lg border-primary-dark bg-primary dark:bg-primary-dark hover:brightness-50 dark:border-primary flex items-center justify-center cursor-pointer"><Icon name="mdi:logout" /></button>
-		<NuxtLink v-if="loggedIn == false" to="/login" aria-label="Login" class="p-2 border rounded-lg border-primary-dark bg-primary dark:bg-primary-dark hover:brightness-50 dark:border-primary flex items-center justify-center cursor-pointer gap-1 text-sm"><Icon name="ic:round-login" />Login</NuxtLink>
+		<button v-if="loggedIn == false" @click="navigateToLogin" aria-label="Login" class="p-2 border rounded-lg border-primary-dark bg-primary dark:bg-primary-dark hover:brightness-50 dark:border-primary flex items-center justify-center cursor-pointer gap-1 text-sm"><Icon name="ic:round-login" />Login</button>
 		<ThemeSwitcher />
 		</div>
 	</header>

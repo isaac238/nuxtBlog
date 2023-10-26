@@ -6,8 +6,8 @@ import DatabaseHandler from '~/utils/db_handler';
 	});
 
 	useHead({
-	title: `Edit Article | NuxtBlog`,
-	})
+		title: `Edit Article | NuxtBlog`,
+	});
 
 
 	const supabase = useSupabaseClient();
@@ -19,6 +19,10 @@ import DatabaseHandler from '~/utils/db_handler';
 
 	const route = useRoute();
 	const parmasTitle = route.params.article;
+
+	if(!user.value) {
+		await navigateTo('/login');
+	}
 
 	if (!await DatabaseHandler.articleExists(supabase, parmasTitle as string, user.value?.id as string)) {
 		await navigateTo('/');

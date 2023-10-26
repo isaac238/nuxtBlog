@@ -53,7 +53,7 @@ export default class DatabaseHandler {
 
 	public static async getContent(url: string) {
 		try {
-			const response  = await fetch(url);
+			const response = await fetch(url);
 			return await response.text();
 		} catch(error) {
 			console.log("Get content error: " + error);

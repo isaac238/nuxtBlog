@@ -8,10 +8,10 @@ export default defineNuxtConfig({
 	  '@nuxt/image',
 	],
   supabase: {
+			redirect: false,
 			redirectOptions: {
 					login: '/login',
 					callback: '/confirm',
-					exclude: ['/register']
 			}
   }
 })

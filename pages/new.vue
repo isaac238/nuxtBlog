@@ -14,6 +14,10 @@
 	const content = useState('content', () => '');
 	const disabled = useState<boolean>('disabled', () => false);
 
+	if (!user.value) {
+		await navigateTo('/login');
+	}
+
 	const validateContent = () => {
 		const contentNotEmpty = content.value.length > 0;
 		const titleNotEmpty = title.value.length > 0;

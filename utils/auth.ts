@@ -45,7 +45,7 @@ export default class Auth {
 			const { error } = await supabase.auth.signInWithOAuth({
 				provider: provider,
 				options: {
-					redirectTo: 'https://blog.isaac238.dev/confirm',
+					redirectTo: 'http://localhost:3000/confirm',
 				}
 			});
 			if (error) throw error;

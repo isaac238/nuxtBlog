@@ -34,6 +34,7 @@ import DatabaseHandler from '~/utils/db_handler';
 		<div class="flex gap-2">
 		<NuxtLink v-if="loggedIn" to="/new" aria-label="New Post" class="p-2 border rounded-lg border-primary-dark bg-primary dark:bg-primary-dark hover:brightness-50 dark:border-primary flex items-center justify-center cursor-pointer"><Icon name="jam:write" /></NuxtLink>
 		<button  v-if="loggedIn" @click="Logout" aria-label="Logout" class="p-2 border rounded-lg border-primary-dark bg-primary dark:bg-primary-dark hover:brightness-50 dark:border-primary flex items-center justify-center cursor-pointer"><Icon name="mdi:logout" /></button>
+		<NuxtLink v-if="!loggedIn" to="/login" aria-label="Login" class="p-2 border rounded-lg border-primary-dark bg-primary dark:bg-primary-dark hover:brightness-50 dark:border-primary flex items-center justify-center cursor-pointer gap-1 text-sm"><Icon name="ic:round-login" />Login</NuxtLink>
 		<ThemeSwitcher />
 		</div>
 	</header>

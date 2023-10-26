@@ -41,6 +41,16 @@ export default class DatabaseHandler {
 		}
 	} 
 
+	public static async getArticlesByUser(supabase: any, authorId: string) {
+		try {
+			const { data, error } = await supabase.from('articles').select('created_at, url, title, description').match({'author': authorId});
+			if (error) throw error;
+			return data;
+		} catch (error) {
+			console.log(error);
+		}
+	}
+
 	public static async getContent(url: string) {
 		try {
 			const response  = await fetch(url);

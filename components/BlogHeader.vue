@@ -5,7 +5,7 @@
 	loggedIn.value = useSupabaseUser().value != null;
 	let username = '';
 	let avatar = '';
-	if (loggedIn) {
+	if (loggedIn.value) {
 		const {data, error} = await supabase.from('profiles').select('id, avatar, username').match({'id': user.value?.id}).single();
 		const profile = useState<any>('profile', () => data);
 		username = 	profile?.value.username;

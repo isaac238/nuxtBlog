@@ -1,8 +1,6 @@
 <script setup lang="ts">
-	import { Marked } from 'marked';
-	import { markedHighlight } from 'marked-highlight';
-	import hljs from 'highlight.js';
-	import useTheme from '../../composasbles/useTheme';
+	import useTheme from '@/composasbles/useTheme';
+	import DatabaseHandler from '@/utils/db_handler';
 
 	const route = useRoute();
 	const title = route.params.article;
@@ -19,93 +17,67 @@
 	layout: 'main',
 	});
 
-	const User = {
-		"id": "",
-		"avatar": "",
-		"username": "",
-	};
+	const author = await DatabaseHandler.getAuthor(supabase, username as string);
+	const articleExists = DatabaseHandler.articleExists(supabase, title as string, author.id);
 
-	const Article = {
-		"created_at": "",
-		"url": "",
-		"title": "",
-		"description": "",
-	};
-
-	const author = useState('author', () => User);
-	const article = useState('article', () => Article);
-
-	const getAuthor = async () => {
-		try {
-			const {data, error} = await supabase.from('profiles').select('id, avatar, username').match({'username': username}).single();
-			if (error) throw error;
-			author.value = data;
-
-		} catch(error) {
-			console.log("Get author error: " + error);
-		}
-
-	}
-	await getAuthor();
-
-	const articleExists = async () => {
-
-		if (!author) return;
-		const articleCount = await supabase.from('articles').select('title', {count: 'exact', head: true}).match({'title': title, 'author': author.value.id});
-		if (articleCount && articleCount.count! > 0) return true;
-		return false;
-	}
-
-	const getArticle = async () => {
-		try {
-			const { data, error } = await supabase.from('articles').select('created_at, url, title, description').match({'title': title, 'author': author.value.id}).single();
-			if (error) throw error;
-			article.value = data;
-		} catch(error) {
-		console.log("Get article error: " + error);
-		}
-	} 
-
-	if (!articleExists()) {
+	if (!articleExists) {
 		navigateTo('/');
 	}
-	await getArticle();
 
-	console.log(article.value);
-	console.log(author.value);
+	const article = await DatabaseHandler.getArticle(supabase, title as string, author.id);
 
+	console.log(article);
+	console.log(author);
 
-	const getContent = async () => {
+	const deleteArticle = async () => {
+		const confirmation = confirm("Are you sure you want to delete this article?");
+		if (!confirmation) return;
+
 		try {
-			const response  = await fetch(article.value.url);
-			return await response.text();
-		} catch(error) {
-			console.log("Get content error: " + error);
+			const { error } = await supabase.from('articles').delete().match({'title': title, 'author': user.value?.id});
+			if (error) throw error;
+		} catch (error) {
+			console.log(error);
+			return alert("Error deleting article");
 		}
+
+		try {
+			const { error } = await supabase.storage.from('articles').remove([user.value?.id + '/' + title + ".md"]);
+			if (error) throw error;
+		} catch (error) {
+			console.log(error);
+			return alert("Error deleting article");
+		}
+		return navigateTo('/');
+	}
+	
+	const editArticle = () => {
+		return navigateTo(`/${author.username}/${article.title}/edit`);
 	}
 
-	const unparsed = await getContent() || "";
-
-	const marked = new Marked(
-		markedHighlight({
-			langPrefix: 'hljs language-',
-			highlight(code, lang) {
-				const language = hljs.getLanguage(lang) ? lang : 'plaintext';
-				return hljs.highlight(code, { language }).value;
-			}
-		})
-	);
-
-	const content = marked.parse(unparsed);
+	const unparsed = await DatabaseHandler.getContent(article.url) || '# An Error Occured';
+	const content = DatabaseHandler.parseContent(unparsed);
+	console.log(content);
+	const userIsAuthor = user.value?.id === author.id;
 </script>
 
 <template>
 	<link v-if="theme === 'dark'" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/tokyo-night-dark.min.css" />
 	<link v-if="theme !== 'dark'" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css" />
 	<div class="bg-primary dark:bg-primary-dark p-8 rounded flex-grow mb-2 border border-accent xl:w-1/2 md:w-full">
-		<div class="inline-flex items-center gap-2 mb-4">
-			<NuxtImg :src=author.avatar class="w-10 h-10 rounded-3xl border-accent border-2"/>
-			<h1 class="text-2xl text-text dark:text-text-dark">{{ author.username }}</h1>
+		<div class="inline-flex items-center justify-between w-full mb-4">
+			<div class="inline-flex items-center gap-2">
+				<NuxtImg :src=author.avatar class="w-10 h-10 rounded-3xl border-accent border-2"/>
+				<h1 class="text-2xl text-text dark:text-text-dark">{{ author.username }}</h1>
+			</div>
+			<div v-if="userIsAuthor" class="inline-flex items-center gap-2">
+				<span @click="deleteArticle()" class="cursor-pointer p-2 bg-secondary dark:bg-secondary-dark rounded inline-flex items-center justify-center text-red-500 border-red-500 border hover:brightness-75">
+					<Icon name="mdi:trash" />
+				</span>
+				<span @click="editArticle()" class="cursor-pointer p-2 bg-secondary dark:bg-secondary-dark rounded inline-flex items-center justify-center text-text dark:text-text-dark border-text dark:border-text-dark border hover:brightness-75">
+					<Icon name="jam:write" />
+				</span>
+			</div>
 		</div>
 		<h1 class="text-5xl font-bold text-text dark:text-text-dark">{{ article.title }}</h1>
 		<h2 class="text-2xl font-medium text-text dark:text-text-dark mt-1">{{ article.description }}</h2>

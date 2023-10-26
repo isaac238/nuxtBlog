@@ -1,5 +1,5 @@
 <script setup lang="ts">
-	import Auth from '@/components/auth';
+	import Auth from '@/utils/auth';
 
 	useHead({
 	title: `Register | NuxtBlog`,

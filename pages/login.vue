@@ -1,6 +1,5 @@
 <script setup lang="ts">
-	import type { NuxtLink } from '#build/components';
-	import Auth from '~/components/auth';
+	import Auth from '@/utils/auth';
 
 	useHead({
 	title: `Login | NuxtBlog`,

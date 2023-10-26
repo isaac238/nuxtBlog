@@ -62,28 +62,30 @@
 </script>
 
 <template>
-	<link v-if="theme === 'dark'" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/tokyo-night-dark.min.css" />
-	<link v-if="theme !== 'dark'" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css" />
-	<div class="bg-primary dark:bg-primary-dark p-8 rounded flex-grow mb-2 border border-accent lg:w-1/2 w-full">
-		<div class="inline-flex items-center justify-between w-full mb-4">
-			<div class="inline-flex items-center gap-2">
-				<NuxtImg :src=author.avatar class="w-10 h-10 rounded-3xl border-accent border-2"/>
-				<h1 class="text-2xl text-text dark:text-text-dark">{{ author.username }}</h1>
+	<ClientOnly fallback-tag="span" fallback="Loading article...">
+		<link v-if="theme === 'dark'" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/tokyo-night-dark.min.css" />
+		<link v-if="theme !== 'dark'" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css" />
+		<div class="bg-primary dark:bg-primary-dark p-8 rounded flex-grow mb-2 border border-accent lg:w-1/2 w-full">
+			<div class="inline-flex items-center justify-between w-full mb-4">
+				<div class="inline-flex items-center gap-2">
+					<NuxtImg :src=author.avatar class="w-10 h-10 rounded-3xl border-accent border-2"/>
+					<h1 class="text-2xl text-text dark:text-text-dark">{{ author.username }}</h1>
+				</div>
+				<div v-if="userIsAuthor" class="inline-flex items-center gap-2">
+					<span @click="deleteArticle()" class="cursor-pointer p-2 bg-secondary dark:bg-secondary-dark rounded inline-flex items-center justify-center text-red-500 border-red-500 border hover:brightness-75">
+						<Icon name="mdi:trash" />
+					</span>
+					<span @click="editArticle()" class="cursor-pointer p-2 bg-secondary dark:bg-secondary-dark rounded inline-flex items-center justify-center text-text dark:text-text-dark border-text dark:border-text-dark border hover:brightness-75">
+						<Icon name="jam:write" />
+					</span>
+				</div>
 			</div>
-			<div v-if="userIsAuthor" class="inline-flex items-center gap-2">
-				<span @click="deleteArticle()" class="cursor-pointer p-2 bg-secondary dark:bg-secondary-dark rounded inline-flex items-center justify-center text-red-500 border-red-500 border hover:brightness-75">
-					<Icon name="mdi:trash" />
-				</span>
-				<span @click="editArticle()" class="cursor-pointer p-2 bg-secondary dark:bg-secondary-dark rounded inline-flex items-center justify-center text-text dark:text-text-dark border-text dark:border-text-dark border hover:brightness-75">
-					<Icon name="jam:write" />
-				</span>
-			</div>
+			<h1 class="text-5xl font-bold text-text dark:text-text-dark">{{ article.title }}</h1>
+			<h2 class="text-2xl font-medium text-text dark:text-text-dark mt-1">{{ article.description }}</h2>
+			<span class="h-0.5 block dark:bg-primary bg-primary-dark w-full my-4"/>
+			<div id="contentDiv" v-html="content" class="text-text dark:text-text-dark"></div>
 		</div>
-		<h1 class="text-5xl font-bold text-text dark:text-text-dark">{{ article.title }}</h1>
-		<h2 class="text-2xl font-medium text-text dark:text-text-dark mt-1">{{ article.description }}</h2>
-		<span class="h-0.5 block dark:bg-primary bg-primary-dark w-full my-4"/>
-		<div id="contentDiv" v-html="content" class="text-text dark:text-text-dark"></div>
-	</div>
+	</ClientOnly>
 </template>
 
 <style>

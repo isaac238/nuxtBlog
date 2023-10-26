@@ -13,9 +13,9 @@ const marked = new Marked(
 );
 
 export default class DatabaseHandler {
-	public static async getAuthor(supabase: any, username: string) {
+	public static async getProfile(supabase: any, fields: string, match: Object) {
 		try {
-			const {data, error} = await supabase.from('profiles').select('id, avatar, username').match({'username': username}).single();
+			const {data, error} = await supabase.from('profiles').select(fields).match(match).single();
 			if (error) throw error;
 			return data;
 

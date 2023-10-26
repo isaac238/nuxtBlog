@@ -17,7 +17,7 @@
 	layout: 'main',
 	});
 
-	const author = await DatabaseHandler.getAuthor(supabase, username as string);
+	const author = await DatabaseHandler.getProfile(supabase, 'id, username, avatar', {username: username});
 	const articleExists = DatabaseHandler.articleExists(supabase, title as string, author.id);
 
 	if (!articleExists) {

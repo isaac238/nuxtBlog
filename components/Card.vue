@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import DatabaseHandler from '~/utils/db_handler';
+
 	const props = defineProps<{
 		title: string,
 		description?: string,
@@ -6,27 +8,9 @@
 		url: string,
 	}>();
 
-	const User = {
-		avatar: '',
-		username: '',
-	};
-
-	let author = User;
 	const supabase = useSupabaseClient();
+	let author = await DatabaseHandler.getProfile(supabase, 'avatar, username', {id: props.author});
 
-	const getAuthor = async () => {
-		try {
-			const {data, error } = await supabase.from('profiles').select('avatar, username').eq('id', props.author).single();
-			if (data) {
-				author = data;
-			}
-			if (error) throw error;
-		} catch (error) {
-			console.log(error);
-		}
-	}
-
-	await getAuthor();
 	const link = "/" + author.username + '/' + props.title;
 
 	const navigate = () => {

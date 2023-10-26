@@ -64,7 +64,7 @@
 <template>
 	<link v-if="theme === 'dark'" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/tokyo-night-dark.min.css" />
 	<link v-if="theme !== 'dark'" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css" />
-	<div class="bg-primary dark:bg-primary-dark p-8 rounded flex-grow mb-2 border border-accent xl:w-1/2 md:w-full">
+	<div class="bg-primary dark:bg-primary-dark p-8 rounded flex-grow mb-2 border border-accent lg:w-1/2 w-full">
 		<div class="inline-flex items-center justify-between w-full mb-4">
 			<div class="inline-flex items-center gap-2">
 				<NuxtImg :src=author.avatar class="w-10 h-10 rounded-3xl border-accent border-2"/>

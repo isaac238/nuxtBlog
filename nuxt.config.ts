@@ -5,7 +5,7 @@ export default defineNuxtConfig({
 	  '@nuxtjs/tailwindcss',
 	  '@nuxtjs/supabase',
 	  'nuxt-icon',
-	  '@nuxt/image'
+	  '@nuxt/image',
 	],
   supabase: {
 			redirectOptions: {
@@ -15,3 +15,4 @@ export default defineNuxtConfig({
 			}
   }
 })
+

@@ -6,7 +6,10 @@ import DatabaseHandler from '~/utils/db_handler';
 	const user = useSupabaseUser();
 	let loggedIn = useLoggedIn();
 	console.log("DEFAULT: " + loggedIn.value);
-	let profile = await DatabaseHandler.getProfile(supabase, 'id, avatar, username', {id: user.value?.id});
+	let profile;
+	if (user.value !== null) {
+		profile = await DatabaseHandler.getProfile(supabase, 'id, avatar, username', {id: user.value?.id});
+	}
 
 	watchEffect(async () => {
 		if (user.value && profile.id != user.value.id) {
@@ -24,6 +27,7 @@ import DatabaseHandler from '~/utils/db_handler';
 
 		if (user.value && !loggedIn.value) {
 			loggedIn.value = true;
+			profile = await DatabaseHandler.getProfile(supabase, 'id, avatar, username', {id: user.value?.id});
 			console.log("EFFECT2: " + loggedIn.value);
 			if (process.client) {
 				document.getElementById('loggedOutDiv')?.classList.add('hidden');

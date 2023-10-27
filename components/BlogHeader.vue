@@ -5,7 +5,6 @@ import DatabaseHandler from '~/utils/db_handler';
 	const supabase = useSupabaseClient();
 	const user = useSupabaseUser();
 	let loggedIn = useLoggedIn();
-	console.log("DEFAULT: " + loggedIn.value);
 	let profile;
 	if (user.value !== null) {
 		profile = await DatabaseHandler.getProfile(supabase, 'id, avatar, username', {id: user.value?.id});
@@ -18,7 +17,6 @@ import DatabaseHandler from '~/utils/db_handler';
 
 		if (!user.value && loggedIn.value) {
 			loggedIn.value = false;
-			console.log("EFFECT: " + loggedIn.value);
 			if (process.client) {
 				document.getElementById('loggedOutDiv')?.classList.remove('hidden');
 				document.getElementById('loggedInDiv')?.classList.add('hidden');
@@ -28,7 +26,6 @@ import DatabaseHandler from '~/utils/db_handler';
 		if (user.value && !loggedIn.value) {
 			loggedIn.value = true;
 			profile = await DatabaseHandler.getProfile(supabase, 'id, avatar, username', {id: user.value?.id});
-			console.log("EFFECT2: " + loggedIn.value);
 			if (process.client) {
 				document.getElementById('loggedOutDiv')?.classList.add('hidden');
 				document.getElementById('loggedInDiv')?.classList.remove('hidden');

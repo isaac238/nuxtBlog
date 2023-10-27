@@ -16,6 +16,7 @@ import DatabaseHandler from '~/utils/db_handler';
 	const description = useState('description', () => '');
 	const content = useState('content', () => '');
 	const disabled = useState<boolean>('disabled', () => false);
+	disabled.value = false;
 
 	const route = useRoute();
 	const parmasTitle = route.params.article;
@@ -32,7 +33,12 @@ import DatabaseHandler from '~/utils/db_handler';
 
 	title.value = article.title;
 	description.value = article.description;
-	content.value = await DatabaseHandler.getContent(article.url) || '# An Error Occured';
+	const { data, refresh } = await useFetch(article.url);
+	content.value = data.value;
+
+	watchEffect(() => {
+		refresh();
+	});
 
 	const validateContent = () => {
 		const contentNotEmpty = content.value.length > 0;

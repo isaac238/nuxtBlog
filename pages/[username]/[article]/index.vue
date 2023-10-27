@@ -55,9 +55,14 @@
 		return navigateTo(`/${author.username}/${article.title}/edit`);
 	}
 
-	const unparsed = await DatabaseHandler.getContent(article.url) || '# An Error Occured';
+	const { data, refresh } = await useFetch(article.url);
+	const unparsed = data.value;
+
+	watchEffect(() => {
+		refresh();
+	});
+
 	const content = DatabaseHandler.parseContent(unparsed);
-	console.log(content);
 	const userIsAuthor = user.value?.id === author.id;
 
 	const navigateToAuthor = () => {

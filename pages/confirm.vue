@@ -18,7 +18,6 @@
 				console.log(error);
 			}
 		}
-		console.log("COUNT: " + userCount.count);
 
 		return navigateTo('/')  
 	}}, { immediate: true })

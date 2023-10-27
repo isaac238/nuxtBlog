@@ -53,10 +53,19 @@ export default class DatabaseHandler {
 
 	public static async getContent(url: string) {
 		try {
-			const response = await fetch(url);
-			return await response.text();
+			const { data, refresh } = await useFetch<string>(url);
+			return {
+				"success": true,
+				"data": data,
+				"refresh": refresh
+			};
 		} catch(error) {
 			console.log("Get content error: " + error);
+			return {
+				success: false,
+				data: {value: "# An Error Occured"},
+				refresh: () => {false},
+			};
 		}
 	}
 
